@@ -1,7 +1,31 @@
-<canvas #game width="640" height="480" style="border: 1px solid black"></canvas>
+<!--<canvas #game width="640" height="480" style="border: 1px solid black"></canvas>
 <p>
   <button (click)="move('right')">Right</button>
   <button (click)="move('left')">Left</button>
   <button (click)="move('up')">Up</button>
   <button (click)="move('down')">Down</button>
-</p>
+</p>-->
+
+<body class="block">
+
+<div class="box">
+  <div *ngIf="diceValueGlobal">
+    <div *ngIf="diceValueGlobal.x >= diceValueGlobal.y">
+      test
+      {{diceValueGlobal.x}}{{diceValueGlobal.y}}
+    </div>
+    <div *ngIf="diceValueGlobal.x < diceValueGlobal.y">
+      test
+      {{diceValueGlobal.y}}{{diceValueGlobal.x}}
+    </div>
+  </div>
+
+  <div>
+    <button (click)="rollDiceWithoutValues()">roll</button>
+  </div>
+  <div id="dice-box1"></div>
+  test
+
+</div>
+
+</body>
