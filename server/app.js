@@ -10,6 +10,7 @@ var diceValue = {
     x: 0,
     y: 0
 };
+var playerList = [];
 Socketio.on("connection", socket => {
     socket.emit("position", position);
     //socket.emit("diceChanged", diceValue);
@@ -27,8 +28,12 @@ Socketio.on("connection", socket => {
         console.log('TEST');
         console.log(data);
         console.log(diceValue);
+        console.log(playerList);
     });
-    socket.on("move", data => {
+    socket.on('playerName', data => {
+        playerList.push({name: data, active: false});
+    });
+    /*socket.on("move", data => {
         switch(data) {
             case "left":
                 position.x -= 5;
@@ -47,5 +52,5 @@ Socketio.on("connection", socket => {
                 Socketio.emit("position", position);
                 break;
         }
-    });
+    });*/
 });

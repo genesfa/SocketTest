@@ -1,31 +1,20 @@
-<!--<canvas #game width="640" height="480" style="border: 1px solid black"></canvas>
-<p>
-  <button (click)="move('right')">Right</button>
-  <button (click)="move('left')">Left</button>
-  <button (click)="move('up')">Up</button>
-  <button (click)="move('down')">Down</button>
-</p>-->
+<div *ngIf="!loggedIn" class="notLogged">
+  <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>
+  <div class="playerName">
+    <form class="example-form">
+      <mat-form-field class="example-full-width">
 
-<body class="block">
+        <mat-label>Player Name</mat-label>
+        <input #name matInput>
 
-<div class="box">
-  <div *ngIf="diceValueGlobal">
-    <div *ngIf="diceValueGlobal.x >= diceValueGlobal.y">
-      test
-      {{diceValueGlobal.x}}{{diceValueGlobal.y}}
-    </div>
-    <div *ngIf="diceValueGlobal.x < diceValueGlobal.y">
-      test
-      {{diceValueGlobal.y}}{{diceValueGlobal.x}}
-    </div>
+      </mat-form-field>
+    </form>
+    <button mat-button (click)="loggeIn(name.value)">Click me!</button>
   </div>
-
-  <div>
-    <button (click)="rollDiceWithoutValues()">roll</button>
-  </div>
-  <div id="dice-box1"></div>
-  test
-
 </div>
 
-</body>
+<div *ngIf="loggedIn">
+  Playername: {{playerName}}
+  <app-roll-window></app-roll-window>
+</div>
+
