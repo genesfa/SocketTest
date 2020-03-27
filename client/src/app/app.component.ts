@@ -8,7 +8,7 @@ import {Owndice} from './owndice';
 })
 export class AppComponent implements OnInit {
   loggedIn = false;
-  private playerName: string;
+  playerName: string;
   public ngOnInit() {
   }
 
@@ -18,6 +18,6 @@ export class AppComponent implements OnInit {
     Owndice.playerName = playerName;
     this.loggedIn = true;
     const socket = io('http://localhost:3000');
-    socket.emit('playerName', playerName);
+    socket.emit('setPlayerName', playerName);
   }
 }

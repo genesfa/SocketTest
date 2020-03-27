@@ -5,10 +5,17 @@
   <button (click)="move('up')">Up</button>
   <button (click)="move('down')">Down</button>
 </p>-->
+<br>
+Other Players:
+<br>
+<div *ngFor=" let player of playerList">
+  {{player.name}}
+  <br>
 
+</div>
 <body class="block">
 
-<div class="box">
+<div  class="box">
   <div *ngIf="diceValueGlobal">
     <div *ngIf="diceValueGlobal.x >= diceValueGlobal.y">
       {{diceValueGlobal.x}}{{diceValueGlobal.y}}
@@ -33,5 +40,4 @@
   </div>
 
 </div>
-
 </body>

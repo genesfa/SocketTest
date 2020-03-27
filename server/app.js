@@ -13,7 +13,9 @@ var diceValue = {
 var playerList = [];
 Socketio.on("connection", socket => {
     socket.emit("position", position);
-    //socket.emit("diceChanged", diceValue);
+    console.log(playerList)
+    socket.emit("getPlayerList", playerList);
+    socket.emit("diceChanged", diceValue);
 });
 Http.listen(3000, () => {
     console.log("Listening at :3000...");
@@ -25,32 +27,12 @@ Socketio.on("connection", socket => {
         diceValue.x = data[0];
         diceValue.y = data[1];
         Socketio.emit("diceChanged", diceValue);
-        console.log('TEST');
-        console.log(data);
-        console.log(diceValue);
-        console.log(playerList);
     });
-    socket.on('playerName', data => {
+    socket.on('setPlayerName', data => {
+        console.log('1')
+        console.log(playerList)
         playerList.push({name: data, active: false});
+        console.log('2')
+        console.log(playerList)
     });
-    /*socket.on("move", data => {
-        switch(data) {
-            case "left":
-                position.x -= 5;
-                Socketio.emit("position", position);
-                break;
-            case "right":
-                position.x += 5;
-                Socketio.emit("position", position);
-                break;
-            case "up":
-                position.y -= 5;
-                Socketio.emit("position", position);
-                break;
-            case "down":
-                position.y += 5;
-                Socketio.emit("position", position);
-                break;
-        }
-    });*/
 });
