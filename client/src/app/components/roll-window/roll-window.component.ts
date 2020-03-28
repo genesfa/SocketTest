@@ -22,21 +22,24 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
   diceValueGlobal = {x: 0, y: 0};
   ownDice = {x: 0, y: 0};
   private timer: any;
-  private playerList: any;
+  playerList: any;
   private counterSubscription: Subscription;
+  private interval: NodeJS.Timeout;
 
   public ngOnInit() {
     this.socket = io('http://localhost:3000');
   }
 
-  public async ngAfterViewInit() {
+  public ngAfterViewInit() {
     this.socket.on('diceChanged', data => {
-      console.log('*+++s')
-      console.log(data)
       this.diceValueGlobal.x = data.x;
       this.diceValueGlobal.y = data.y;
     });
     this.getPlayerList();
+    this.interval = setInterval(() => {
+      this.getPlayerList();
+    }, 2000);
+    /*  clearInterval(this.interval);*/
 
   }
 
@@ -53,15 +56,16 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
 
   private getPlayerList() {
 
-    console.log('*fff')
 
-    this.socket.on('getPlayerList', data => {
-      console.log('jjjj');
-      console.log(data);
+    this.socket = io('http://localhost:3000');
+    this.socket.emit('getPlayerList');
+    this.socket.on('getPlayerListResponse', data => {
+
       this.playerList = data;
     });
 
   }
+
 }
 
 function response(res) {

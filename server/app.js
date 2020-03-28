@@ -13,7 +13,6 @@ var diceValue = {
 var playerList = [];
 Socketio.on("connection", socket => {
     socket.emit("position", position);
-    console.log(playerList)
     socket.emit("getPlayerList", playerList);
     socket.emit("diceChanged", diceValue);
 });
@@ -21,7 +20,15 @@ Http.listen(3000, () => {
     console.log("Listening at :3000...");
 });
 
+
 Socketio.on("connection", socket => {
+
+    socket.on('getPlayerList', data => {
+
+        // write Your awesome code here
+        socket.emit('getPlayerListResponse', playerList);
+    });
+
     socket.emit("position", position);
     socket.on('diceRolled', data => {
         diceValue.x = data[0];
@@ -29,10 +36,8 @@ Socketio.on("connection", socket => {
         Socketio.emit("diceChanged", diceValue);
     });
     socket.on('setPlayerName', data => {
-        console.log('1')
-        console.log(playerList)
+
         playerList.push({name: data, active: false});
-        console.log('2')
-        console.log(playerList)
+
     });
 });
