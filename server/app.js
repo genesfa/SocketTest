@@ -35,9 +35,14 @@ Socketio.on("connection", socket => {
         diceValue.y = data[1];
         Socketio.emit("diceChanged", diceValue);
     });
+    socket.on('playerReady', id => {
+        playerList[id].ready = true;
+    });
+    socket.on('reset', () => {
+        playerList = [];
+    });
+
     socket.on('setPlayerName', data => {
-
-        playerList.push({name: data, active: false});
-
+        playerList.push({name: data.name, id: data.id, active: false, ready: false});
     });
 });

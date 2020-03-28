@@ -6,16 +6,18 @@
   <button (click)="move('down')">Down</button>
 </p>-->
 <br>
-Other Players:
+Players List:
 <br>
-<div *ngFor=" let player of playerList">
+<div *ngFor="let player of playerList">
   {{player.name}}
+  <mat-icon *ngIf="player.ready" style="color: greenyellow">done</mat-icon>
+  <mat-icon *ngIf="!player.ready" style="color: red">clear</mat-icon>
   <br>
 
 </div>
 <body class="block">
 
-<div  class="box">
+<div *ngIf="ready" class="box">
   <div *ngIf="diceValueGlobal">
     <div *ngIf="diceValueGlobal.x >= diceValueGlobal.y">
       {{diceValueGlobal.x}}{{diceValueGlobal.y}}
@@ -38,6 +40,12 @@ Other Players:
       {{ownDice.y}}{{ownDice.x}}
     </div>
   </div>
+
+</div>
+<div *ngIf="!ready" class="box">
+
+Click Button When Ready
+  <button mat-button (click)="playerReady()">Ready</button>
 
 </div>
 </body>

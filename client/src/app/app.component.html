@@ -9,12 +9,13 @@
 
       </mat-form-field>
     </form>
-    <button mat-button (click)="loggeIn(name.value)">Click me!</button>
+    <button mat-button (click)="loggeIn(name.value)">Continue</button>
+    <br>
+    <button mat-button (click)="reset()">Reset Game</button>
   </div>
 </div>
 
 <div *ngIf="loggedIn">
-  Player's Name: {{playerName}}
   <app-roll-window></app-roll-window>
 </div>
 
