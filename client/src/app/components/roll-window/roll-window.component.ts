@@ -21,11 +21,16 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
   private socket: any;
   diceValueGlobal = {x: 0, y: 0};
   ownDice = {x: 0, y: 0};
+  lieDice = {x: 0, y: 0};
   private timer: any;
   playerList: any;
   private counterSubscription: Subscription;
   private interval: any;
   ready = false;
+  gameRunning = false;
+  activePlayerId = -1;
+  myturn = false;
+  private isMyTurnInterval;
 
   public ngOnInit() {
     this.socket = io('http://localhost:3000');
@@ -34,14 +39,21 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit() {
     this.socket.on('diceChanged', data => {
+      console.log('tsts WTF')
+      console.log(data);
       this.diceValueGlobal.x = data.x;
       this.diceValueGlobal.y = data.y;
+    });
+    this.socket.on('lieDiceChanged', data => {
+      console.log(':D')
+      console.log(data);
+      this.lieDice.x = data.x;
+      this.lieDice.y = data.y;
     });
     this.interval = setInterval(() => {
       this.getPlayerList();
     }, 2000);
     /*  clearInterval(this.interval);*/
-
   }
 
 
@@ -64,13 +76,49 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
   }
 
   playerReady() {
-    this.ready = true;
     for (const player of this.playerList) {
       if (player.id === Owndice.playerName.id) {
         this.socket.emit('playerReady', player.id);
         this.getPlayerList();
       }
     }
+    const Interval = setInterval(() => {
+      this.socket.emit('allReady');
+      this.socket.on('allReadyResponse', allReady => {
+
+        if (allReady) {
+          this.ready = true;
+          clearInterval(Interval);
+          this.gameRunning = true;
+          clearInterval(this.interval);
+          this.isMyTurn();
+        }
+      });
+    }, 1000);
+
+  }
+
+  isMyTurn() {
+    this.isMyTurnInterval = setInterval(() => {
+      this.socket = io('http://localhost:3000');
+      this.socket.emit('getActivePlayer');
+      this.socket.on('getActivePlayerResponse', activPlayerId => {
+        console.log('LEL')
+        console.log(activPlayerId)
+        this.activePlayerId = activPlayerId;
+        if (this.activePlayerId === Owndice.playerName.id) {
+          this.myturn = true;
+        } else {
+          this.myturn = false;
+        }
+
+      });
+    }, 1000);
+
+  }
+
+  send(rollValue) {
+    this.socket.emit('lieDiceValue', rollValue);
   }
 }
 

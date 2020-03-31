@@ -10,15 +10,49 @@ Players List:
 <br>
 <div *ngFor="let player of playerList">
   {{player.name}}
-  <mat-icon *ngIf="player.ready" style="color: greenyellow">done</mat-icon>
-  <mat-icon *ngIf="!player.ready" style="color: red">clear</mat-icon>
+  <mat-icon *ngIf="player.ready && !gameRunning" style="color: greenyellow">done</mat-icon>
+  <mat-icon *ngIf="!player.ready && !gameRunning" style="color: red">clear</mat-icon>
+  <mat-icon *ngIf="gameRunning && (player.id === activePlayerId)" style="color: green">arrow_back</mat-icon>
   <br>
 
 </div>
 <body class="block">
 
 <div *ngIf="ready" class="box">
-  <div *ngIf="diceValueGlobal">
+
+  <div>
+    <div *ngIf="lieDice.x >= lieDice.y">
+    Dice Called From player before you  {{lieDice.x}}{{lieDice.y}}
+    </div>
+    <div *ngIf="lieDice.x < lieDice.y">
+      Dice Called From player before you   {{lieDice.y}}{{lieDice.x}}
+    </div>
+
+</div>
+  <div>
+    <button *ngIf="myturn" (click)="rollDiceWithoutValues()">roll</button>
+  </div>
+  <div id="dice-box1"></div>
+  <div *ngIf="ownDice && myturn">
+    <div *ngIf="ownDice.x >= ownDice.y">
+      <label>
+        <input #rollValue type="number" value="{{ownDice.x}}{{ownDice.y}}">
+      </label>
+      <button (click)="send(rollValue.value)">Send</button>
+    </div>
+    <div *ngIf="ownDice.x < ownDice.y">
+      <label>
+        <input #rollValue type="number" value="{{ownDice.y}}{{ownDice.x}}">
+      </label>
+      <button (click)="send(rollValue.value)">Send</button>
+    </div>
+
+  </div>
+
+</div>
+<br>
+<div *ngIf="ready" class="tooltip"> Hover To Show the REAL Current Dice Value
+  <div class="tooltiptext" *ngIf="diceValueGlobal">
     <div *ngIf="diceValueGlobal.x >= diceValueGlobal.y">
       {{diceValueGlobal.x}}{{diceValueGlobal.y}}
     </div>
@@ -26,25 +60,10 @@ Players List:
       {{diceValueGlobal.y}}{{diceValueGlobal.x}}
     </div>
   </div>
-
-  <div>
-    <button (click)="rollDiceWithoutValues()">roll</button>
-  </div>
-  <div id="dice-box1"></div>
-  test
-  <div *ngIf="ownDice">
-    <div *ngIf="ownDice.x >= ownDice.y">
-      {{ownDice.x}}{{ownDice.y}}
-    </div>
-    <div *ngIf="ownDice.x < ownDice.y">
-      {{ownDice.y}}{{ownDice.x}}
-    </div>
-  </div>
-
 </div>
 <div *ngIf="!ready" class="box">
 
-Click Button When Ready
+  Click Button When Ready
   <button mat-button (click)="playerReady()">Ready</button>
 
 </div>
