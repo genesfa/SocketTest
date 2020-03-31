@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
 
   loggeIn(playerName: string) {
     this.loggedIn = true;
-    const socket = io('http://192.168.137.1:3000');
+    const socket = io('http://localhost:3000');
     socket.emit('getPlayerList');
     socket.on('getPlayerListResponse', data => {
       socket.emit('setPlayerName', {name: playerName, id: data.length});
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
   }
 
   reset() {
-    const socket = io('http://192.168.137.1:3000');
+    const socket = io('http://localhost:3000');
     socket.emit('reset');
   }
 }

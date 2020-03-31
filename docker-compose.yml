@@ -1,11 +1,37 @@
-version: '3.5' # We use version 3.5 syntax
-services: # Here we define our service(s)
-  angular-service: # The name of the service
-    container_name: angularcontainer  # Container name
-    build: ./client # Location of our Dockerfile
-    volumes: # Volume binding
-      - './client:/usr/src/app'
+#version: '3.5' # We use version 3.5 syntax
+#services: # Here we define our service(s)
+#  angular-service: # The name of the service
+#    container_name: angularcontainer  # Container name
+#    build: ./client # Location of our Dockerfile
+#    volumes: # Volume binding
+#      - './client:/usr/src/app'
+#    ports:
+#      - '3323:4200' # Port mapping
+#    command: >
+#      bash -c "npm install && ng serve --host 0.0.0.0 --port 4200"
+#
+
+#version: '3.5'
+#
+#services:
+#  angular-service:
+#    container_name: angular-service-container
+#    build: ./client
+#    volumes:
+#    - './angular:/usr/src/app'
+#    ports:
+#    - '4500:4500'
+version: '3'
+services:
+  server:
+    build:
+      ./server
     ports:
-      - '3323:4200' # Port mapping
-    command: >
-      bash -c "npm install && ng serve --host 0.0.0.0 --port 4200"
+      - "3000:3000"
+  client:
+    build:
+      ./client
+    ports:
+    - "8080:4200"
+
+
