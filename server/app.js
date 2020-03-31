@@ -80,11 +80,21 @@ Socketio.on("connection", socket => {
             activPlayerId++;
 
 
+
         }
 
     });
     socket.on('reset', () => {
         playerList = [];
+        diceValue = {
+            x: 0,
+            y: 0
+        };
+         activPlayerId = -1;
+         lieDiceValue = {
+            x: 0,
+            y: 0
+        };
     });
 
     socket.on('setPlayerName', data => {
