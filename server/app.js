@@ -25,18 +25,24 @@ Socketio.on("connection", socket => {
 });
 Http.listen(3000, () => {
     console.log("Listening at :3000...");
+    Express.get("/health", (request, result, next) => {
+        result.send("OK");
+    })
 });
 
 
 Socketio.on("connection", socket => {
 
     socket.on('getActivePlayer', data => {
-        if (playerList !== undefined) {
-            if (activPlayerId === -1) {
-                activPlayerId = playerList[0].id;
+        try {
+            if (playerList) {
+                if (activPlayerId === -1) {
+                    activPlayerId = playerList[0].id;
+                }
             }
+        }catch (e) {
+            console.log(JSON.stringify(playerList))
         }
-
         // write Your awesome code here
         socket.emit('getActivePlayerResponse', activPlayerId);
     });
@@ -79,10 +85,7 @@ Socketio.on("connection", socket => {
         if (playerList.length - 1 === activPlayerId) {
             activPlayerId = 0;
         } else {
-
             activPlayerId++;
-
-
         }
 
     });
@@ -101,11 +104,11 @@ Socketio.on("connection", socket => {
 
     socket.on('setPlayerName', data => {
         console.log(playerList)
-    /*    if (playerList[0].id === -1) {
-            playerList = [];
-            playerList.push({name: data.name, id: data.id, active: false, ready: false});
-        } else {*/
-            playerList.push({name: data.name, id: data.id, active: false, ready: false});
-     /*   }*/
+        /*    if (playerList[0].id === -1) {
+                playerList = [];
+                playerList.push({name: data.name, id: data.id, active: false, ready: false});
+            } else {*/
+        playerList.push({name: data.name, id: data.id, active: false, ready: false});
+        /*   }*/
     });
 });

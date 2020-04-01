@@ -1,6 +1,8 @@
-import { Component,  OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import io from 'socket.io-client';
 import {Owndice} from './owndice';
+import {environment} from '../environments/environment';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,12 +10,13 @@ import {Owndice} from './owndice';
 })
 export class AppComponent implements OnInit {
   loggedIn = false;
+
   public ngOnInit() {
   }
 
   loggeIn(playerName: string) {
     this.loggedIn = true;
-    const socket = io('http://localhost:3000');
+    const socket = io(environment.serverUrl);
     socket.emit('getPlayerList');
     socket.on('getPlayerListResponse', data => {
       socket.emit('setPlayerName', {name: playerName, id: data.length});
@@ -22,7 +25,7 @@ export class AppComponent implements OnInit {
   }
 
   reset() {
-    const socket = io('http://localhost:3000');
+    const socket = io(environment.serverUrl);
     socket.emit('reset');
   }
 }

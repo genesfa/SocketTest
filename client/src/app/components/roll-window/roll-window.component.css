@@ -57,3 +57,7 @@
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.bold {
+  font-weight: 900;
+}

@@ -1,10 +1,9 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import io from 'socket.io-client';
 import rollADie from 'roll-a-die';
 import {Owndice} from '../../owndice';
-import {Subject, Observable, Subscription} from 'rxjs';
-import {interval} from 'rxjs';
-import {async} from "rxjs/internal/scheduler/async";
+import {Subscription} from 'rxjs';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-roll-window',
@@ -33,9 +32,10 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
   private isMyTurnInterval;
   firstRoll = true;
   secondRoll = false;
+  public globalOwndice = Owndice;
 
   public ngOnInit() {
-    this.socket = io('http://localhost:3000');
+    this.socket = io(environment.serverUrl);
     this.getPlayerList();
   }
 
@@ -59,7 +59,7 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
 
   public rollDiceWithoutValues() {
     const element = document.getElementById('dice-box1');
-    rollADie({element, numberOfDice: 2, callback: response, delay: 1000000000});
+    rollADie({element, numberOfDice: 2, callback: this.response, delay: 1000000000});
     this.ownDice.x = Owndice.ownDice.x;
     this.ownDice.y = Owndice.ownDice.y;
     if (this.firstRoll) {
@@ -71,9 +71,6 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
   }
 
   private getPlayerList() {
-
-
-    this.socket = io('http://localhost:3000');
     this.socket.emit('getPlayerList');
     this.socket.on('getPlayerListResponse', data => {
       this.playerList = data;
@@ -106,7 +103,6 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
 
   isMyTurn() {
     this.isMyTurnInterval = setInterval(() => {
-      this.socket = io('http://localhost:3000');
       this.socket.emit('getActivePlayer');
       this.socket.on('getActivePlayerResponse', activPlayerId => {
         this.activePlayerId = activPlayerId;
@@ -124,7 +120,7 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
   }
 
   send(rollValue) {
-    this.ownDice.x = 0
+    this.ownDice.x = 0;
     this.ownDice.y = 0;
     this.socket.emit('lieDiceValue', rollValue);
 
@@ -135,18 +131,18 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
     rollADie({
       element,
       numberOfDice: 2,
-      callback: response,
+      callback: this.response,
       delay: 1000000000,
       values: [Number(this.diceValueGlobal.x), Number(this.diceValueGlobal.y)]
     });
   }
+  private response = (res) => {
+    Owndice.ownDice.x = res[0];
+    Owndice.ownDice.y = res[1];
+    // returns an array of the values from the dice
+    this.socket.emit('diceRolled', res);
+
+  }
 }
 
-function response(res) {
-  Owndice.ownDice.x = res[0];
-  Owndice.ownDice.y = res[1];
-  // returns an array of the values from the dice
-  const socket = io('http://localhost:3000');
-  socket.emit('diceRolled', res);
 
-}
