@@ -9,7 +9,7 @@
 Players List:
 <br>
 <div *ngFor="let player of playerList">
-  {{player.name}}
+  <span [class.bold]="player.name == globalOwndice.playerName.name">{{player.name}}</span>
   <mat-icon *ngIf="player.ready && !gameRunning" style="color: greenyellow">done</mat-icon>
   <mat-icon *ngIf="!player.ready && !gameRunning" style="color: red">clear</mat-icon>
   <mat-icon *ngIf="gameRunning && (player.id === activePlayerId)" style="color: green">arrow_back</mat-icon>

@@ -1,7 +1,7 @@
 <div *ngIf="!loggedIn" class="notLogged">
   <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>
   <div class="playerName">
-    <form class="example-form">
+    <form class="example-form" (submit)="loggeIn(name.value)">
       <mat-form-field class="example-full-width">
 
         <mat-label>Player Name</mat-label>
