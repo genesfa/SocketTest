@@ -30,10 +30,13 @@ Players List:
 
 </div>
   <div>
-    <button *ngIf="myturn" (click)="rollDiceWithoutValues()">roll</button>
+    <button *ngIf="myturn && !secondRoll" (click)="lie()">Lie</button>
   </div>
-  <div id="dice-box1"></div>
-  <div *ngIf="ownDice && myturn">
+  <div>
+    <button *ngIf="myturn && !secondRoll" (click)="rollDiceWithoutValues()">roll</button>
+  </div>
+  <div *ngIf="!secondRoll" id="dice-box1"></div>
+  <div *ngIf="ownDice && myturn && !secondRoll">
     <div *ngIf="ownDice.x >= ownDice.y">
       <label>
         <input #rollValue type="number" value="{{ownDice.x}}{{ownDice.y}}">
@@ -49,9 +52,26 @@ Players List:
 
   </div>
 
+  <div *ngIf="ownDice && myturn && secondRoll">
+
+    <div *ngIf="ownDice.x >= ownDice.y">
+      <label>
+        <input #rollValue type="number" value="00">
+      </label>
+      <button (click)="send(rollValue.value)">Send</button>
+    </div>
+    <div *ngIf="ownDice.x < ownDice.y">
+      <label>
+        <input #rollValue type="number" value="00">
+      </label>
+      <button (click)="send(rollValue.value)">Send</button>
+    </div>
+
+  </div>
+
 </div>
 <br>
-<div *ngIf="ready" class="tooltip"> Hover To Show the REAL Current Dice Value
+<!--<div *ngIf="ready" class="tooltip"> Hover To Show the REAL Current Dice Value
   <div class="tooltiptext" *ngIf="diceValueGlobal">
     <div *ngIf="diceValueGlobal.x >= diceValueGlobal.y">
       {{diceValueGlobal.x}}{{diceValueGlobal.y}}
@@ -60,7 +80,7 @@ Players List:
       {{diceValueGlobal.y}}{{diceValueGlobal.x}}
     </div>
   </div>
-</div>
+</div>-->
 <div *ngIf="!ready" class="box">
 
   Click Button When Ready

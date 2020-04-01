@@ -10,7 +10,7 @@ var diceValue = {
     x: 0,
     y: 0
 };
-var playerList = [{name: '', id: -1, active: false, ready: false}];
+var playerList = [];
 var activPlayerId = -1;
 var lieDiceValue = {
     x: 0,
@@ -66,6 +66,9 @@ Socketio.on("connection", socket => {
         Socketio.emit("diceChanged", diceValue);
     });
     socket.on('playerReady', id => {
+        console.log('player Ready');
+        console.log(id);
+        console.log(playerList)
         playerList[id].ready = true;
     });
     socket.on('lieDiceValue', lieDiceValueResponse => {
@@ -84,7 +87,7 @@ Socketio.on("connection", socket => {
 
     });
     socket.on('reset', () => {
-        playerList = [{name: '', id: -1, active: false, ready: false}];
+        playerList = [];
         diceValue = {
             x: 0,
             y: 0
@@ -98,13 +101,11 @@ Socketio.on("connection", socket => {
 
     socket.on('setPlayerName', data => {
         console.log(playerList)
-        if (playerList[0].id === -1) {
+    /*    if (playerList[0].id === -1) {
             playerList = [];
             playerList.push({name: data.name, id: data.id, active: false, ready: false});
-        } else {
-
-
+        } else {*/
             playerList.push({name: data.name, id: data.id, active: false, ready: false});
-        }
+     /*   }*/
     });
 });

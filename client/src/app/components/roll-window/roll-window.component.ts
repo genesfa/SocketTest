@@ -31,6 +31,8 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
   activePlayerId = -1;
   myturn = false;
   private isMyTurnInterval;
+  firstRoll = true;
+  secondRoll = false;
 
   public ngOnInit() {
     this.socket = io('http://localhost:3000');
@@ -39,14 +41,12 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit() {
     this.socket.on('diceChanged', data => {
-      console.log('tsts WTF')
-      console.log(data);
+
       this.diceValueGlobal.x = data.x;
       this.diceValueGlobal.y = data.y;
     });
     this.socket.on('lieDiceChanged', data => {
-      console.log(':D')
-      console.log(data);
+
       this.lieDice.x = data.x;
       this.lieDice.y = data.y;
     });
@@ -62,6 +62,12 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
     rollADie({element, numberOfDice: 2, callback: response, delay: 1000000000});
     this.ownDice.x = Owndice.ownDice.x;
     this.ownDice.y = Owndice.ownDice.y;
+    if (this.firstRoll) {
+      this.firstRoll = false;
+    } else {
+      this.secondRoll = true;
+    }
+
   }
 
   private getPlayerList() {
@@ -103,13 +109,13 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
       this.socket = io('http://localhost:3000');
       this.socket.emit('getActivePlayer');
       this.socket.on('getActivePlayerResponse', activPlayerId => {
-        console.log('LEL')
-        console.log(activPlayerId)
         this.activePlayerId = activPlayerId;
         if (this.activePlayerId === Owndice.playerName.id) {
           this.myturn = true;
         } else {
           this.myturn = false;
+          this.firstRoll = true;
+          this.secondRoll = false;
         }
 
       });
@@ -118,7 +124,21 @@ export class RollWindowComponent implements OnInit, AfterViewInit {
   }
 
   send(rollValue) {
+    this.ownDice.x = 0
+    this.ownDice.y = 0;
     this.socket.emit('lieDiceValue', rollValue);
+
+  }
+
+  lie() {
+    const element = document.getElementById('dice-box1');
+    rollADie({
+      element,
+      numberOfDice: 2,
+      callback: response,
+      delay: 1000000000,
+      values: [Number(this.diceValueGlobal.x), Number(this.diceValueGlobal.y)]
+    });
   }
 }
 
@@ -128,4 +148,5 @@ function response(res) {
   // returns an array of the values from the dice
   const socket = io('http://localhost:3000');
   socket.emit('diceRolled', res);
+
 }
